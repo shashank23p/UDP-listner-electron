@@ -1,0 +1,19 @@
+body {
+  text-align: center;
+}
+#dataDiv {
+  width: 80%;
+  height: 300px;
+  margin: auto;
+  border: 2px black solid;
+  overflow: scroll;
+}
+.red {
+  color: red;
+}
+.blue {
+  color: blue;
+}
+p {
+  margin-bottom: 0px !important;
+}
