@@ -39,11 +39,11 @@ async function save() {
       writeFile(
         filePath,
         data,
-        () => (msgBorad.innerHTML = `<p class="green">Data saved!<p>`)
+        () => (msgBorad.innerHTML = `<span class="green">Data saved!</span>`)
       );
     }
   } else {
-    msgBorad.innerHTML = `<p class="red">No data found, Start listing to get data<p>`;
+    msgBorad.innerHTML = `<span class="red">No data found, Start listing to get data<span>`;
   }
 }
 function closeUDP() {
@@ -57,7 +57,7 @@ function startUDP() {
   });
 
   socket.on("message", (msg, req) => {
-    dataDiv.innerHTML += `<p class="${dataColorToggel()}">${msg}</p>`;
+    dataDiv.innerHTML += `<span class="${dataColorToggel()}">${msg}</span>`;
     dataDiv.scrollTop = dataDiv.scrollHeight;
   });
 
@@ -68,13 +68,13 @@ function startUDP() {
     closeBtn.disabled = false;
     saveBtn.disabled = true;
     startBtn.disabled = true;
-    msgBorad.innerHTML = `<p class="blue">Listing for UDP packets at ${privateIP}:${address.port}</p>`;
+    msgBorad.innerHTML = `<span class="blue">Listing for UDP packets at ${privateIP}:${address.port}</span>`;
   });
 
   socket.on("close", () => {
     startBtn.disabled = false;
     closeBtn.disabled = true;
     saveBtn.disabled = false;
-    msgBorad.innerHTML = `<p class="red">Socket Disconnected<p>`;
+    msgBorad.innerHTML = `<span class="red">Socket Disconnected</span>`;
   });
 }
