@@ -9,70 +9,40 @@
       integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
       crossorigin="anonymous"
     />
+    <script src="https://use.fontawesome.com/4b34131d21.js"></script>
   </head>
   <body>
     <h1>UDP Listner</h1>
-    <input
+
+    <div id="dataDiv"></div>
+    <div id="msgBorad"></div>
+    <button
       id="startBtn"
       class="btn btn-primary"
       type="button"
-      value="Start"
       onclick="startUDP()"
-    />
-    <input
+    >
+      <i class="fa fa-play" aria-hidden="true"></i> Start
+    </button>
+    <button
       id="closeBtn"
       class="btn btn-danger"
       type="button"
-      value="Close"
       onclick="closeUDP()"
-    />
-    <div id="msgBorad"></div>
-    <div id="dataDiv"></div>
+    >
+      <i class="fa fa-stop" aria-hidden="true"></i> Stop
+    </button>
+    <button id="saveBtn" class="btn btn-success" type="button" onclick="save()">
+      <i class="fa fa-save" aria-hidden="true"></i> Save
+    </button>
+    <button
+      id="clearBtn"
+      class="btn btn-secondary"
+      type="button"
+      onclick="empty()"
+    >
+      <i class="fa fa-trash" aria-hidden="true"></i> Clear
+    </button>
   </body>
-  <script>
-    var startBtn = document.getElementById("startBtn");
-    var closeBtn = document.getElementById("closeBtn");
-    var msgBorad = document.getElementById("msgBorad");
-    var dataDiv = document.getElementById("dataDiv");
-    var dataColor = "red";
-    var socket;
-
-    function dataColorToggel() {
-      if (dataColor == "red") dataColor = "blue";
-      else dataColor = "red";
-      return dataColor;
-    }
-    function closeUDP() {
-      socket.close();
-    }
-    function startUDP() {
-      const dgram = require("dgram");
-      var ip = require("ip");
-
-      socket = dgram.createSocket("udp4", {
-        exclusive: false,
-      });
-
-      socket.on("message", (msg, req) => {
-        dataDiv.innerHTML += `<p class="${dataColorToggel()}">${msg}</p>`;
-        dataDiv.scrollTop = dataDiv.scrollHeight;
-      });
-
-      socket.bind("8081", "localhost");
-      socket.on("listening", () => {
-        const address = socket.address();
-        if (address.address == "0.0.0.0" || address.address == "127.0.0.1")
-          address.address = ip.address();
-        closeBtn.disabled = false;
-        startBtn.disabled = true;
-        msgBorad.innerHTML = `listening ${address.address}:${address.port}<br>`;
-      });
-
-      socket.on("close", () => {
-        startBtn.disabled = false;
-        closeBtn.disabled = true;
-        msgBorad.innerHTML = `<p class="red">Socket Disconnected<p>`;
-      });
-    }
-  </script>
+  <script src="render.js" defer></script>
 </html>

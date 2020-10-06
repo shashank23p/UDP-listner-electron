@@ -8,6 +8,7 @@ app.on("ready", function () {
   mainWindow = new BrowserWindow({
     webPreferences: {
       nodeIntegration: true,
+      enableRemoteModule: true,
     },
   });
   mainWindow.loadURL(

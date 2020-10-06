@@ -1,2 +1,4 @@
 node_modules
-release-builds
+dist
+.DS_Store
+build
