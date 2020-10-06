@@ -1,11 +1,11 @@
 {
-  "name": "UDP-listner",
-  "version": "1.0.0",
+  "name": "udplistner",
+  "version": "1.0.1",
   "description": "Site servey kit to recive data via UDP datagram",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "pack-all":"electron-builder -mwl",
+    "pack-all": "electron-builder -mwl",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
@@ -17,5 +17,12 @@
   "devDependencies": {
     "electron": "^10.1.3",
     "electron-builder": "^22.8.1"
+  },
+  "build": {
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true
+    }
   }
 }

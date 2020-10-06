@@ -61,13 +61,14 @@ function startUDP() {
     dataDiv.scrollTop = dataDiv.scrollHeight;
   });
 
-  socket.bind("8081", ip.address());
+  socket.bind("8081");
   socket.on("listening", () => {
     const address = socket.address();
+    var privateIP = ip.address();
     closeBtn.disabled = false;
     saveBtn.disabled = true;
     startBtn.disabled = true;
-    msgBorad.innerHTML = `<p class="blue">Listing for UDP packets at ${address.address}:${address.port}</p>`;
+    msgBorad.innerHTML = `<p class="blue">Listing for UDP packets at ${privateIP}:${address.port}</p>`;
   });
 
   socket.on("close", () => {
