@@ -16,33 +16,40 @@
 
     <div id="dataDiv"></div>
     <div id="msgBorad"></div>
-    <button
-      id="startBtn"
-      class="btn btn-primary"
-      type="button"
-      onclick="startUDP()"
-    >
-      <i class="fa fa-play" aria-hidden="true"></i> Start
-    </button>
-    <button
-      id="closeBtn"
-      class="btn btn-danger"
-      type="button"
-      onclick="closeUDP()"
-    >
-      <i class="fa fa-stop" aria-hidden="true"></i> Stop
-    </button>
-    <button id="saveBtn" class="btn btn-success" type="button" onclick="save()">
-      <i class="fa fa-save" aria-hidden="true"></i> Save
-    </button>
-    <button
-      id="clearBtn"
-      class="btn btn-secondary"
-      type="button"
-      onclick="empty()"
-    >
-      <i class="fa fa-trash" aria-hidden="true"></i> Clear
-    </button>
+    <div class="buttons">
+      <button
+        id="startBtn"
+        class="btn btn-primary"
+        type="button"
+        onclick="startUDP()"
+      >
+        <i class="fa fa-play" aria-hidden="true"></i> Start
+      </button>
+      <button
+        id="closeBtn"
+        class="btn btn-danger"
+        type="button"
+        onclick="closeUDP()"
+      >
+        <i class="fa fa-stop" aria-hidden="true"></i> Stop
+      </button>
+      <button
+        id="saveBtn"
+        class="btn btn-success"
+        type="button"
+        onclick="save()"
+      >
+        <i class="fa fa-save" aria-hidden="true"></i> Save
+      </button>
+      <button
+        id="clearBtn"
+        class="btn btn-secondary"
+        type="button"
+        onclick="empty()"
+      >
+        <i class="fa fa-trash" aria-hidden="true"></i> Clear
+      </button>
+    </div>
   </body>
   <script src="render.js" defer></script>
 </html>
