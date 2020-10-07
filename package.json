@@ -1,6 +1,6 @@
 {
-  "name": "udplistner",
-  "version": "1.0.1",
+  "name": "udplistener",
+  "version": "1.0.2",
   "description": "Site servey kit to recive data via UDP datagram",
   "main": "main.js",
   "scripts": {
@@ -22,7 +22,9 @@
     "nsis": {
       "oneClick": false,
       "perMachine": false,
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
     }
   }
 }

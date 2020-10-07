@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>UDP Listner</title>
+    <title>UDP Listener</title>
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
@@ -9,15 +9,31 @@
     <link rel="stylesheet" href="main.css" />
   </head>
   <body>
-    <h1 class="title">UDP Listner</h1>
+    <h1 class="title">UDP Listener</h1>
 
     <div id="dataDiv"></div>
-    <div id="msgBorad"></div>
-    <div class="buttons">
-      <button id="startBtn" type="button" onclick="startUDP()">Start</button>
-      <button id="closeBtn" type="button" onclick="closeUDP()">Stop</button>
-      <button id="saveBtn" type="button" onclick="save()">Save</button>
-      <button id="clearBtn" type="button" onclick="empty()">Clear</button>
+    <div class="controls">
+      <div id="msgBorad"></div>
+      <div class="buttons">
+        <button id="startBtn" class="btn" type="button" onclick="startUDP()">
+          Start
+        </button>
+        <button
+          id="closeBtn"
+          class="btn"
+          type="button"
+          onclick="closeUDP()"
+          disabled
+        >
+          Stop
+        </button>
+        <button id="saveBtn" class="btn" type="button" onclick="save()">
+          Save
+        </button>
+        <button id="clearBtn" class="btn" type="button" onclick="empty()">
+          Clear
+        </button>
+      </div>
     </div>
   </body>
   <script src="render.js" defer></script>
