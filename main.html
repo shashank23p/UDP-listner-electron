@@ -6,32 +6,22 @@
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     />
-    <link rel="stylesheet" href="main.css" />
+    <link rel="stylesheet" href="css/main.css" />
   </head>
   <body>
-    <h1 class="title">UDP Listener</h1>
-
-    <div id="dataDiv"></div>
-    <div class="controls">
-      <div id="msgBorad"></div>
-      <div class="buttons">
-        <button id="startBtn" class="btn" type="button" onclick="startUDP()">
-          Start
-        </button>
-        <button
-          id="closeBtn"
-          class="btn"
-          type="button"
-          onclick="closeUDP()"
-          disabled
-        >
-          Stop
-        </button>
-        <button id="clearBtn" class="btn" type="button" onclick="empty()">
-          Clear
-        </button>
+    <div class="connection">
+      <img src="img/iot.png" alt="" class="iotConnection" />
+      <div class="topLine">
+        <div class="" id="packet"></div>
       </div>
+      <img src="img/laptop.png" alt="" class="iotConnection" />
     </div>
+    <p>Numbar of packets recieved</p>
+    <span class="bigNumber" id="bigNumber">0</span>
+    <button class="myBtn" id="startBtn" onclick="startUDP()">Start</button>
+    <button class="myBtn" id="closeBtn" onclick="closeUDP()">Stop</button>
+    <div class="msgBoard" id="msgBorad">Ready</div>
   </body>
+
   <script src="render.js" defer></script>
 </html>

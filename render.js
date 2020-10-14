@@ -9,7 +9,8 @@ const { dialog } = remote;
 var startBtn = document.getElementById("startBtn");
 var closeBtn = document.getElementById("closeBtn");
 var msgBorad = document.getElementById("msgBorad");
-var dataDiv = document.getElementById("dataDiv");
+var bigNumber = document.getElementById("bigNumber");
+var packet = document.getElementById("packet");
 
 //defaults
 var socket;
@@ -17,10 +18,9 @@ var data = [];
 const saveLocation = "";
 let saveFilePath = "data.csv";
 let writeMin = 100;
+let packetAnimation=false;
+noOfPackets=0;
 
-function empty() {
-  dataDiv.innerHTML = "";
-}
 
 function closeUDP() {
   socket.close();
@@ -28,8 +28,6 @@ function closeUDP() {
 
 function showMsg(msg, type = "") {
   msgBorad.innerHTML = `<span class="${type}">${msg}</span>`;
-  dataDiv.innerHTML += `<p class="${type}">${msg}</p>`;
-  dataDiv.scrollTop = dataDiv.scrollHeight;
 }
 
 async function writeToFile(data) {
@@ -37,14 +35,15 @@ async function writeToFile(data) {
   data.forEach((row) => {
     csvString += row + "\n";
   });
-  console.log(csvString);
   appendFile(saveFilePath, csvString, () =>
-    showMsg(`Writen ${data.length} datapoint to ${saveFilePath}`, "")
+    showMsg(`Writen ${noOfPackets} datapoint to ${saveFilePath}`, "")
   );
 }
 
 //staring UDP listner
 async function startUDP() {
+  noOfPackets=0;
+  bigNumber.innerText=noOfPackets;
   data = [];
   var { filePath } = await dialog.showSaveDialog({
     buttonLabel: "Create File to Save Data",
@@ -53,17 +52,24 @@ async function startUDP() {
 
   if (filePath) {
     saveFilePath = filePath;
-    showMsg(`Data will be stored at ${saveFilePath} datapoint to csv`, "blue");
     writeFile(filePath, "", () => startSocket());
   }
 }
 function startSocket() {
+  
   socket = dgram.createSocket("udp4", {
     exclusive: false,
   });
   socket.on("message", (bytes, req) => {
+    if(!packetAnimation){
+      packet.classList.add("packet");
+      packetAnimation=true;
+    }
     const msg = bytes.toString();
     data.push(msg);
+    noOfPackets++;
+    showMsg(`Packet recived [${msg}]`);
+    bigNumber.innerText=noOfPackets;
     if (data.length >= writeMin) {
       writeToFile(data);
       data = [];
@@ -74,14 +80,15 @@ function startSocket() {
   socket.on("listening", () => {
     const address = socket.address();
     var privateIP = ip.address();
-    closeBtn.disabled = false;
-    startBtn.disabled = true;
+    closeBtn.style.display = "block";
+    startBtn.style.display = "none";
     showMsg(`Listing for UDP packets at ${privateIP}:${address.port}`, "green");
   });
 
   socket.on("close", () => {
-    startBtn.disabled = false;
-    closeBtn.disabled = true;
+    closeBtn.style.display = "none";
+    startBtn.style.display = "block";
+    packet.classList.remove("packet");
     showMsg(`Stoped`, "red");
     writeToFile(data);
   });

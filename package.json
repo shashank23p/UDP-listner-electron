@@ -1,6 +1,6 @@
 {
   "name": "udplistener",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Site servey kit to recive data via UDP datagram",
   "main": "main.js",
   "scripts": {
@@ -15,6 +15,7 @@
   "author": "Shashank Padwal",
   "license": "ISC",
   "dependencies": {
+    "detect-ssid": "^1.0.3",
     "ip": "^1.1.5"
   },
   "devDependencies": {
