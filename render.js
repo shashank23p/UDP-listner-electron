@@ -19,11 +19,16 @@ const saveLocation = "";
 let saveFilePath = "data.csv";
 let writeMin = 100;
 let packetAnimation=false;
-noOfPackets=0;
+let noOfPackets=0;
+let port="8081";
 
 
 function closeUDP() {
-  socket.close();
+  try {
+    socket.close();
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 function showMsg(msg, type = "") {
@@ -49,47 +54,49 @@ async function startUDP() {
     buttonLabel: "Create File to Save Data",
     defaultPath: `data.csv`,
   });
-
   if (filePath) {
     saveFilePath = filePath;
     writeFile(filePath, "", () => startSocket());
   }
 }
 function startSocket() {
-  
-  socket = dgram.createSocket("udp4", {
-    exclusive: false,
-  });
-  socket.on("message", (bytes, req) => {
-    if(!packetAnimation){
-      packet.classList.add("packet");
-      packetAnimation=true;
-    }
-    const msg = bytes.toString();
-    data.push(msg);
-    noOfPackets++;
-    showMsg(`Packet recived [${msg}]`);
-    bigNumber.innerText=noOfPackets;
-    if (data.length >= writeMin) {
+  try {
+    socket = dgram.createSocket("udp4", {
+      exclusive: false,
+    });
+    socket.on("message", (bytes, req) => {
+      if(!packetAnimation){
+        packet.classList.add("packet");
+        packetAnimation=true;
+      }
+      const msg = bytes.toString();
+      data.push(msg);
+      noOfPackets++;
+      showMsg(`Packet recived [${msg}]`);
+      bigNumber.innerText=noOfPackets;
+      if (data.length >= writeMin) {
+        writeToFile(data);
+        data = [];
+      }
+    });
+    socket.bind(port);
+    socket.on("listening", () => {
+      const address = socket.address();
+      var privateIP = ip.address();
+      closeBtn.style.display = "block";
+      startBtn.style.display = "none";
+      showMsg(`Listing for UDP packets at ${privateIP}:${address.port}`, "green");
+      console.log(`Listing for UDP packets at ${privateIP}:${address.port}`);
+    });
+    socket.on("close", () => {
+      closeBtn.style.display = "none";
+      startBtn.style.display = "block";
+      packet.classList.remove("packet");
+      showMsg(`Stoped`, "red");
       writeToFile(data);
-      data = [];
-    }
-  });
-
-  socket.bind("8081");
-  socket.on("listening", () => {
-    const address = socket.address();
-    var privateIP = ip.address();
-    closeBtn.style.display = "block";
-    startBtn.style.display = "none";
-    showMsg(`Listing for UDP packets at ${privateIP}:${address.port}`, "green");
-  });
-
-  socket.on("close", () => {
-    closeBtn.style.display = "none";
-    startBtn.style.display = "block";
-    packet.classList.remove("packet");
-    showMsg(`Stoped`, "red");
-    writeToFile(data);
-  });
+    });
+  } catch (error) {
+    showMsg(error.message, "red");
+  }
+  
 }
