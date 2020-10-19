@@ -19,56 +19,68 @@ var divBeforeConnect = document.getElementById("before-connect");
 //defaults
 var socket;
 var data = [];
-const saveLocation = "";
 let saveFilePath = "data.csv";
 let writeMin = 100;
 let packetAnimation=false;
 let noOfPackets=0;
 let port="8081";
 let messagePort="8083";
-var messageSocket;
 let bordcastToConnectTimeout;
 let ssidStart = "Asi";
 
 
 window.onload = function () {
   listenForMessages();
-  // getSSID();
 };
 
 function listenForMessages(){
   try {
-    messageSocket = dgram.createSocket("udp4", {
+    let messageListenSocket = dgram.createSocket("udp4", {
       exclusive: false,
     });
-    messageSocket.bind(messagePort,()=>bordcastToConnect());
-    messageSocket.on("listening", () => {
+    messageListenSocket.bind(messagePort,()=>bordcastToConnect());
+    messageListenSocket.on("listening", () => {
       console.log(`Listing for UDP messages`);
     });
     //on data recived
-    messageSocket.on("message", (bytes, req) => {
-      clearTimeout(bordcastToConnectTimeout);
+    messageListenSocket.on("message", (bytes, req) => {
       const msg = bytes.toString();//converting to string
-      connected();
-      console.log(msg);
+      let msgObj={};
+      try{
+        msgObj=JSON.parse(msg);
+      }catch{}
+      switch(msgObj.title) {
+        case "connected":
+          clearTimeout(bordcastToConnectTimeout);
+          connected();
+          break;
+        case undefined:
+          break;
+        default:
+          console.log("Can not process this message:"+msg);
+      }
+      
     });
-    messageSocket.on("close", () => {
+    messageListenSocket.on("close", () => {
       showMsg(`message socket stoped`, "red");
     });
   } catch (error) {
     showMsg(error.message, "red");
   }
 }
-
 function bordcastToConnect(){
+  let messageSendSocket = dgram.createSocket("udp4");
   var privateIP = ip.address();
   let message=privateIP;
-  messageSocket.send(message, 0, message.length, 8085, "255.255.255.255", function (
-    err,
-    bytes
-  ) {
-    console.log(privateIP);
-    bordcastToConnectTimeout=setTimeout(bordcastToConnect,1000);
+
+  messageSendSocket.bind(() => {
+    messageSendSocket.setBroadcast(true);
+    messageSendSocket.send(message, 0, message.length, 8083, "255.255.255.255", function (
+      err,
+      bytes
+    ) {
+      bordcastToConnectTimeout=setTimeout(bordcastToConnect,1000);
+    });
   });
 }
 function getSSID() {
