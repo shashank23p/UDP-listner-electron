@@ -1,9 +1,11 @@
 //imports
+window.$ = window.jQuery = require("./js/jquery");
 const { writeFile, appendFile } = require("fs");
 const dgram = require("dgram");
 const ip = require("ip");
 const remote = require("electron").remote;
 const { dialog } = remote;
+var detectSSid = require("detect-ssid");
 
 //dom elements
 var startBtn = document.getElementById("startBtn");
@@ -11,6 +13,8 @@ var closeBtn = document.getElementById("closeBtn");
 var msgBorad = document.getElementById("msgBorad");
 var bigNumber = document.getElementById("bigNumber");
 var packet = document.getElementById("packet");
+var loaderText = document.getElementById("loader-text");
+var divBeforeConnect = document.getElementById("before-connect");
 
 //defaults
 var socket;
@@ -21,8 +25,34 @@ let writeMin = 100;
 let packetAnimation=false;
 let noOfPackets=0;
 let port="8081";
+let ssidStart = "Asi";
 
 
+window.onload = function () {
+  console.log("window loaded");
+  getSSID();
+};
+function getSSID() {
+  detectSSid(function (error, ssidname) {
+    if (ssidStart == ssidname.substr(0, ssidStart.length)) {
+      setTimeout(connected, 1000);
+    } else {
+      setTimeout(getSSID, 1000);
+    }
+  });
+}
+function connected() {
+  $("#ripple").fadeOut("fast", function () {
+    $("#iotImg").fadeIn("slow");
+    loaderText.innerHTML =
+      "<span class='primary'>Connected to IOT device</span>";
+    setTimeout(openMain, 2000);
+  });
+}
+function openMain() {
+  $("#before-connect").slideUp();
+}
+//close data socket
 function closeUDP() {
   try {
     socket.close();
@@ -31,10 +61,13 @@ function closeUDP() {
   }
 }
 
+//show msg of message board
 function showMsg(msg, type = "") {
   msgBorad.innerHTML = `<span class="${type}">${msg}</span>`;
 }
 
+
+//write entry to file
 async function writeToFile(data) {
   csvString = "";
   data.forEach((row) => {
@@ -45,7 +78,7 @@ async function writeToFile(data) {
   );
 }
 
-//staring UDP listner
+//staring UDP listner for data
 async function startUDP() {
   noOfPackets=0;
   bigNumber.innerText=noOfPackets;
@@ -59,18 +92,29 @@ async function startUDP() {
     writeFile(filePath, "", () => startSocket());
   }
 }
+
+//stat socket to listen data
 function startSocket() {
   try {
     socket = dgram.createSocket("udp4", {
       exclusive: false,
     });
     socket.bind(port);
+    socket.on("listening", () => {
+      const address = socket.address();
+      var privateIP = ip.address();
+      closeBtn.style.display = "block";
+      startBtn.style.display = "none";
+      showMsg(`Listing for UDP packets at ${privateIP}:${address.port}`, "green");
+      console.log(`Listing for UDP packets at ${privateIP}:${address.port}`);
+    });
+    //on data recived
     socket.on("message", (bytes, req) => {
       if(!packetAnimation){
         packet.classList.add("packet");
         packetAnimation=true;
       }
-      const msg = bytes.toString();
+      const msg = bytes.toString();//converting to string
       data.push(msg);
       noOfPackets++;
       showMsg(`Packet recived [${msg}]`);
@@ -79,14 +123,6 @@ function startSocket() {
         writeToFile(data);
         data = [];
       }
-    });
-    socket.on("listening", () => {
-      const address = socket.address();
-      var privateIP = ip.address();
-      closeBtn.style.display = "block";
-      startBtn.style.display = "none";
-      showMsg(`Listing for UDP packets at ${privateIP}:${address.port}`, "green");
-      console.log(`Listing for UDP packets at ${privateIP}:${address.port}`);
     });
     socket.on("close", () => {
       closeBtn.style.display = "none";

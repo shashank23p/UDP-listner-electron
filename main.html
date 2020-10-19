@@ -9,19 +9,41 @@
     <link rel="stylesheet" href="css/main.css" />
   </head>
   <body>
-    <div class="connection">
-      <img src="img/iot.png" alt="" class="iotConnection" />
-      <div class="topLine">
-        <div class="" id="packet"></div>
+    <div id="before-connect">
+      <div class="loader">
+        <img
+          src="img/iot.png"
+          alt=""
+          class="iotConnected disNone"
+          id="iotImg"
+        />
+        <div class="lds-ripple" id="ripple">
+          <div></div>
+          <div></div>
+        </div>
       </div>
-      <img src="img/laptop.png" alt="" class="iotConnection" />
+      <p style="text-align: center" id="loader-text">
+        <b>Looking for MIP IOT device</b><br />
+        <span class="smallText">
+          Make sure you are connected to wifi of IOT device</span
+        >
+      </p>
     </div>
-    <p>Numbar of packets recieved</p>
-    <span class="bigNumber" id="bigNumber">0</span>
-    <button class="myBtn" id="startBtn" onclick="startUDP()">Start</button>
-    <button class="myBtn" id="closeBtn" onclick="closeUDP()">Stop</button>
-    <div class="msgBoard" id="msgBorad">Ready</div>
+    <div id="after-connect">
+      <div class="connection">
+        <img src="img/iot.png" alt="" class="iotConnection" />
+        <div class="topLine">
+          <div class="" id="packet"></div>
+        </div>
+        <img src="img/laptop.png" alt="" class="iotConnection" />
+      </div>
+      <p>Numbar of packets recieved</p>
+      <span class="bigNumber" id="bigNumber">0</span>
+      <button class="myBtn" id="startBtn" onclick="startUDP()">Start</button>
+      <button class="myBtn" id="closeBtn" onclick="closeUDP()">Stop</button>
+      <div class="msgBoard" id="msgBorad">Ready</div>
+    </div>
   </body>
 
-  <script src="render.js" defer></script>
+  <script src="js/render.js" defer></script>
 </html>
