@@ -1,5 +1,5 @@
 {
-  "name": "udplistener",
+  "name": "site-survey-app",
   "version": "1.0.5",
   "description": "Site servey kit to recive data via UDP datagram",
   "main": "main.js",

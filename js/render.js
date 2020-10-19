@@ -25,13 +25,52 @@ let writeMin = 100;
 let packetAnimation=false;
 let noOfPackets=0;
 let port="8081";
+let messagePort="8083";
+var messageSocket;
+let bordcastToConnectTimeout;
 let ssidStart = "Asi";
 
 
 window.onload = function () {
-  console.log("window loaded");
-  getSSID();
+  listenForMessages();
+  // getSSID();
 };
+
+function listenForMessages(){
+  try {
+    messageSocket = dgram.createSocket("udp4", {
+      exclusive: false,
+    });
+    messageSocket.bind(messagePort,()=>bordcastToConnect());
+    messageSocket.on("listening", () => {
+      console.log(`Listing for UDP messages`);
+    });
+    //on data recived
+    messageSocket.on("message", (bytes, req) => {
+      clearTimeout(bordcastToConnectTimeout);
+      const msg = bytes.toString();//converting to string
+      connected();
+      console.log(msg);
+    });
+    messageSocket.on("close", () => {
+      showMsg(`message socket stoped`, "red");
+    });
+  } catch (error) {
+    showMsg(error.message, "red");
+  }
+}
+
+function bordcastToConnect(){
+  var privateIP = ip.address();
+  let message=privateIP;
+  messageSocket.send(message, 0, message.length, 8085, "255.255.255.255", function (
+    err,
+    bytes
+  ) {
+    console.log(privateIP);
+    bordcastToConnectTimeout=setTimeout(bordcastToConnect,1000);
+  });
+}
 function getSSID() {
   detectSSid(function (error, ssidname) {
     if (ssidStart == ssidname.substr(0, ssidStart.length)) {
