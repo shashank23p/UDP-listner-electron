@@ -64,6 +64,7 @@ function startSocket() {
     socket = dgram.createSocket("udp4", {
       exclusive: false,
     });
+    socket.bind(port);
     socket.on("message", (bytes, req) => {
       if(!packetAnimation){
         packet.classList.add("packet");
@@ -79,7 +80,6 @@ function startSocket() {
         data = [];
       }
     });
-    socket.bind(port);
     socket.on("listening", () => {
       const address = socket.address();
       var privateIP = ip.address();
@@ -98,5 +98,4 @@ function startSocket() {
   } catch (error) {
     showMsg(error.message, "red");
   }
-  
 }
